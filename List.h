@@ -115,9 +115,14 @@ public:
 		if (this->isFull())
 			return false;
 
+		// Increase capacity
 		++this->next;
+		
+		// Move items up to make room
 		for (IndexType i = index + 1; i < this->next; ++i)
 			this->items[i] = this->items[i - 1];
+		
+		// Copy the new item into place
 		this->items[index] = item;
 		return true;
 	}
@@ -130,8 +135,10 @@ public:
 			if (this->items[index] != item)
 				continue;
 
-			// Move everything down
+			// Decrease capacity
 			--this->next;
+			
+			// Move everything down
 			while (index < this->next)
 			{
 				this->items[index] = this->items[index + 1];
@@ -152,20 +159,25 @@ public:
 		// assert(index < this->getCapacity());
 		// assert(index < this->next);
 
+		// Decrease capacity
 		--this->next;
 
+		// Move all items down
 		for (IndexType i = index; i < this->next; ++i)
 				this->items[i] = this->items[i + 1];
-		
+
+		// Destroy the last item
 		this->items[this->next].~ItemType();
 	}
 	
 	// O(n)
 	void clear()
 	{
+		// Destroy all items
 		for (IndexType i = 0; i < this->next; ++i)
 			this->items[i].~ItemType();
-			
+
+		// Reset capacity
 		this->next = 0;
 	}
 	
@@ -179,10 +191,12 @@ public:
 	// Returns -1 if item not found
 	IndexOfType getIndexOf(const ItemType & item) const
 	{
+		// Do a manual search
 		for (IndexType index = 0; index < this->next; ++index)
 			if (this->items[index] == item)
 				return static_cast<IndexOfType>(index);
 
+		// If no match was found, return -1
 		return -1;
 	}
 };
